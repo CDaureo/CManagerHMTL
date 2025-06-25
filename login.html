@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - CManager</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; }
+        form { margin-bottom: 30px; }
+        label { display: block; margin-top: 10px; }
+        input { margin-bottom: 10px; }
+    </style>
+</head>
+<body>
+    <h2>Iniciar Sesión</h2>
+    <form id="loginForm">
+        <label for="login-username">Usuario:</label>
+        <input type="text" id="login-username" name="username" required autocomplete="username">
+        <label for="login-password">Contraseña:</label>
+        <input type="password" id="login-password" name="password" required autocomplete="current-password">
+        <button type="submit">Iniciar Sesión</button>
+    </form>
+
+    <h2>Registrarse</h2>
+    <form id="registerForm">
+        <label for="register-username">Usuario:</label>
+        <input type="text" id="register-username" name="username" required autocomplete="username">
+        <label for="register-password">Contraseña:</label>
+        <input type="password" id="register-password" name="password" required autocomplete="new-password">
+        <button type="submit">Registrarse</button>
+    </form>
+
+    <script>
+    // Inicio de sesión
+    document.getElementById('loginForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        const username = document.getElementById('login-username').value;
+        const password = document.getElementById('login-password').value;
+
+        const response = await fetch('http://localhost:8080/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ username, password })
+        });
+
+        if (response.ok) {
+            const result = await response.json();
+            if(result.success){
+                alert("Inicio de sesión exitoso");
+            } else {
+                alert("Usuario o contraseña incorrectos");
+            }
+        } else {
+            alert("Error en el servidor");
+        }
+    });
+
+    // Registro de usuario
+    document.getElementById('registerForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        const username = document.getElementById('register-username').value;
+        const password = document.getElementById('register-password').value;
+
+        const response = await fetch('http://localhost:8080/register', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ username, password })
+        });
+
+        if (response.ok) {
+            const result = await response.json();
+            if(result.success){
+                alert("Usuario registrado correctamente");
+            } else {
+    			alert(result.message || "No se pudo registrar el usuario");
+            }
+        } else {
+            alert("Error en el servidor");
+        }
+    });
+    </script>
+</body>
+</html>
